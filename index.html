@@ -221,14 +221,12 @@ function updateTrackProgress(){
   playerUI.duration.textContent=formatTrackTime(total);
   playerUI.seek.value=total?Math.min(100,current/total*100):0;
 }
+let soundtrackRequested = false;
 function startSoundtrack(){
-  if(soundtrackPlayer){soundtrackPlayer.playVideo();return;}
-  playerUI.status.textContent="LOADING AUDIO";
-  if(!window.YT||!window.YT.Player){
-    window.onYouTubeIframeAPIReady=function(){createSoundtrackPlayer(true);};
-    const api=document.createElement("script");api.src="https://www.youtube.com/iframe_api";
-    document.head.appendChild(api);
-  }else createSoundtrackPlayer(true);
+  soundtrackRequested=true;
+  playerUI.status.textContent="STARTING AUDIO";
+  // Called directly from the password-submit gesture to request playback.
+  if(soundtrackPlayer && soundtrackReady) soundtrackPlayer.playVideo();
 }
 function createSoundtrackPlayer(autoplay){
   if(soundtrackPlayer)return;
@@ -239,7 +237,7 @@ function createSoundtrackPlayer(autoplay){
       soundtrackReady=true;
       playerUI.status.textContent="READY TO PLAY";
       playerUI.duration.textContent=formatTrackTime(event.target.getDuration());
-      if(autoplay)event.target.playVideo();
+      if(autoplay || soundtrackRequested)event.target.playVideo();
       if(!soundtrackProgressTimer)soundtrackProgressTimer=window.setInterval(updateTrackProgress,500);
     },onStateChange:event=>{
       if(event.data===YT.PlayerState.PLAYING)setTrackPlaying(true);
@@ -272,6 +270,14 @@ playerUI.seek.addEventListener("change",()=>{
   if(soundtrackPlayer&&soundtrackReady){const total=soundtrackPlayer.getDuration()||0;soundtrackPlayer.seekTo(total*(Number(playerUI.seek.value)/100),true);}
   seekInProgress=false;
 });
+// Preload and prepare the audio engine while the visitor enters the password.
+// This gives the password-submit click the best chance of authorizing audible playback.
+(function preloadSoundtrack(){
+  const api=document.createElement("script");
+  api.src="https://www.youtube.com/iframe_api";
+  document.head.appendChild(api);
+  window.onYouTubeIframeAPIReady=function(){createSoundtrackPlayer(false);};
+})();
 
 /* ================= EDIT THESE SETTINGS ================= */
 const CONFIG = {
