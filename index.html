@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#000000">
 <meta name="description" content="all about money — personal profile and live Discord presence.">
-<title>YOUR NAME — profile</title>
+<title>rev — profile</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -21,7 +21,7 @@ main{width:min(100% - 32px,720px);margin:70px auto 60px}
 .profile{position:relative;padding:0 34px 28px;border:1px solid var(--line);border-radius:18px;background:var(--panel);backdrop-filter:blur(18px);box-shadow:0 25px 100px #0008;overflow:hidden}
 .profile:before{content:"";position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.7;z-index:2}
 .banner{height:190px;margin:0 -34px 0;background:#000000 url('assets/banner.jpg') center 43%/cover no-repeat;border-radius:18px 18px 0 0;position:relative}
-.banner:after{content:\"\";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.94))}
+.banner:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.94))}
 .topline{display:flex;justify-content:space-between;align-items:center;font:10px 'DM Mono',monospace;color:#777;letter-spacing:.12em;text-transform:uppercase}
 .pill{border:1px solid var(--line);border-radius:30px;padding:7px 11px;display:flex;gap:8px;align-items:center;color:#aaa}
 .dot{width:7px;height:7px;border-radius:50%;background:#777;box-shadow:0 0 10px currentColor}.dot.online{background:#43e68a;color:#43e68a}.dot.idle{background:#f0b84c;color:#f0b84c}.dot.dnd{background:#ed5353;color:#ed5353}
@@ -53,15 +53,15 @@ h1{font-size:clamp(30px,7vw,45px);line-height:1;margin:0 0 10px;font-weight:700;
 .smoke-particle{
   position:fixed;left:0;top:0;width:var(--size,34px);height:var(--size,34px);
   border-radius:50%;pointer-events:none;z-index:9999;
-  background:radial-gradient(circle,rgba(139,92,246,.32) 0%,rgba(91,33,182,.18) 38%,rgba(49,20,90,0) 72%);
-  filter:blur(var(--blur,9px));mix-blend-mode:screen;
-  transform:translate(-50%,-50%) scale(.55);
-  animation:smoke-drift 1.15s ease-out forwards;
+  background:radial-gradient(circle,rgba(190,155,255,.78) 0%,rgba(139,92,246,.52) 28%,rgba(91,33,182,.30) 56%,rgba(49,20,90,0) 78%);
+  filter:blur(var(--blur,7px));mix-blend-mode:screen;
+  transform:translate(-50%,-50%) scale(.7);
+  animation:smoke-drift 1.55s ease-out forwards;
 }
 @keyframes smoke-drift{
-  0%{opacity:.75;transform:translate(-50%,-50%) scale(.55)}
-  35%{opacity:.48}
-  100%{opacity:0;transform:translate(calc(-50% + var(--dx,18px)),calc(-50% - var(--dy,30px))) scale(2.2)}
+  0%{opacity:1;transform:translate(-50%,-50%) scale(.7)}
+  35%{opacity:.82}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx,18px)),calc(-50% - var(--dy,30px))) scale(2.8)}
 }
 @media(prefers-reduced-motion:reduce){
   .smoke-particle{animation-duration:.35s}
@@ -73,12 +73,13 @@ h1{font-size:clamp(30px,7vw,45px);line-height:1;margin:0 0 10px;font-weight:700;
 <div class="noise"></div>
 <nav>
   <div class="brand"><span>✳</span> XTRISTAN.GZ</div>
-  <div class="navlinks"><a href="#about">about</a><a href="#presence">presence</a><a href="#links">links</a></div>
+  
 </nav>
 <main>
   <div class="eyebrow">✳ &nbsp; personal space on the internet</div>
   <article class="profile" id="about">
-    <div class="banner" role="img" aria-label="Profile banner"></div>\n    <div class="topline"><span>PROFILE / 001</span><span class="pill"><i class="dot" id="statusDot"></i><span id="statusText">STATUS NOT CONNECTED</span></span></div>
+    <div class="banner" role="img" aria-label="Profile banner"></div>
+    <div class="topline"><span>PROFILE / 001</span><span class="pill"><i class="dot" id="statusDot"></i><span id="statusText">STATUS NOT CONNECTED</span></span></div>
     <div class="hero">
       <div class="avatar-wrap">
         <img class="avatar" id="avatar" src="assets/avatar.jpg" alt="Profile avatar">
@@ -104,14 +105,7 @@ h1{font-size:clamp(30px,7vw,45px);line-height:1;margin:0 0 10px;font-weight:700;
         <div><div class="activity-name" id="spotifyName">Nothing playing right now</div><div class="activity-sub" id="spotifyArtist">When you listen on Spotify with Discord connected, it will appear here.</div></div>
       </div>
     </section>
-    <section class="section" id="links">
-      <div class="section-head"><span class="section-title">find me elsewhere</span><span class="section-meta">ELSEWHERE / WEB</span></div>
-      <div class="links">
-        <a class="link" id="discordLink" href="https://discord.com" target="_blank" rel="noreferrer"><b>◉</b> Discord</a>
-        <a class="link" href="https://instagram.com/" target="_blank" rel="noreferrer"><b>◎</b> Instagram</a>
-        <a class="link" href="https://x.com/" target="_blank" rel="noreferrer"><b>𝕏</b> Twitter / X</a>
-      </div>
-    </section>
+
   </article>
   <div class="footer"><span>© <span id="year"></span> XTRISTAN.GZ</span><span>made with intent.</span></div>
 </main>
@@ -122,19 +116,13 @@ const CONFIG = {
   displayName: "xtristan.gz",
   username: "@xtristan.gz",
   bio: "all about money",
-  discordProfile: "https://discord.com/users/1319554589137047583",
-  instagram: "https://instagram.com/",
-  twitter: "https://x.com/"
 };
 /* ======================================================= */
 const $ = id => document.getElementById(id);
 $("displayName").textContent = CONFIG.displayName;
 $("username").textContent = CONFIG.username;
 $("bio").textContent = CONFIG.bio;
-$("discordLink").href = CONFIG.discordProfile;
 $("year").textContent = new Date().getFullYear();
-document.querySelectorAll(".links a")[1].href = CONFIG.instagram;
-document.querySelectorAll(".links a")[2].href = CONFIG.twitter;
 
 function setStatus(status){
   const labels={online:"ONLINE",idle:"IDLE",dnd:"DO NOT DISTURB",offline:"OFFLINE"};
@@ -205,18 +193,18 @@ async function loadPresence(){
   let touchActive = false;
   function makeSmoke(x, y, intensity = 1) {
     const now = performance.now();
-    if (now - lastSpawn < (intensity > 1 ? 24 : 34)) return;
+    if (now - lastSpawn < (intensity > 1 ? 13 : 17)) return;
     lastSpawn = now;
     const particle = document.createElement("i");
     particle.className = "smoke-particle";
-    const size = 24 + Math.random() * 36;
+    const size = 38 + Math.random() * 54;
     particle.style.left = x + "px";
     particle.style.top = y + "px";
     particle.style.setProperty("--size", size + "px");
-    particle.style.setProperty("--blur", (7 + Math.random() * 9) + "px");
+    particle.style.setProperty("--blur", (5 + Math.random() * 7) + "px");
     particle.style.setProperty("--dx", (-24 + Math.random() * 48) + "px");
     particle.style.setProperty("--dy", (18 + Math.random() * 42) + "px");
-    particle.style.opacity = reduceMotion ? ".28" : String(.55 + Math.random() * .3);
+    particle.style.opacity = reduceMotion ? ".5" : String(.82 + Math.random() * .18);
     document.body.appendChild(particle);
     particle.addEventListener("animationend", () => particle.remove(), {once:true});
   }
