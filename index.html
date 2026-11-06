@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="all about money — personal profile and live Discord presence.">
+<title>YOUR NAME — profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000000;--panel:rgba(3,3,3,.96);--line:rgba(255,255,255,.09);--muted:#858585;--text:#f3f3f3;--accent:#8b5cf6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:#000000;z-index:-2}
+.noise{position:fixed;inset:0;pointer-events:none;opacity:.055;z-index:-1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E")}
+nav{height:76px;max-width:1080px;margin:auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06)}
+.brand{font:500 13px 'DM Mono',monospace;letter-spacing:.12em;color:#fff}.brand span{color:var(--accent)}
+.navlinks{display:flex;gap:25px}.navlinks a{color:#888;text-decoration:none;font:11px 'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;transition:.2s}.navlinks a:hover{color:var(--accent)}
+main{width:min(100% - 32px,720px);margin:70px auto 60px}
+.eyebrow{font:11px 'DM Mono',monospace;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;text-align:center;margin-bottom:22px}
+.profile{position:relative;padding:0 34px 28px;border:1px solid var(--line);border-radius:18px;background:var(--panel);backdrop-filter:blur(18px);box-shadow:0 25px 100px #0008;overflow:hidden}
+.profile:before{content:"";position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.7;z-index:2}
+.banner{height:190px;margin:0 -34px 0;background:#000000 url('assets/banner.jpg') center 43%/cover no-repeat;border-radius:18px 18px 0 0;position:relative}
+.banner:after{content:\"\";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.94))}
+.topline{display:flex;justify-content:space-between;align-items:center;font:10px 'DM Mono',monospace;color:#777;letter-spacing:.12em;text-transform:uppercase}
+.pill{border:1px solid var(--line);border-radius:30px;padding:7px 11px;display:flex;gap:8px;align-items:center;color:#aaa}
+.dot{width:7px;height:7px;border-radius:50%;background:#777;box-shadow:0 0 10px currentColor}.dot.online{background:#43e68a;color:#43e68a}.dot.idle{background:#f0b84c;color:#f0b84c}.dot.dnd{background:#ed5353;color:#ed5353}
+.hero{text-align:center;padding:38px 0 24px}
+.avatar-wrap{position:relative;width:112px;height:112px;margin:0 auto 20px}
+.avatar{width:112px;height:112px;border-radius:50%;object-fit:cover;border:2px solid #ffffff22;background:#202020;box-shadow:0 0 0 7px #ffffff08,0 0 35px #8b5cf618}
+.status-ring{position:absolute;right:3px;bottom:5px;width:19px;height:19px;border:4px solid #030303;border-radius:50%;background:#777}
+h1{font-size:clamp(30px,7vw,45px);line-height:1;margin:0 0 10px;font-weight:700;letter-spacing:-.055em}
+.handle{font:12px 'DM Mono',monospace;color:#858585}
+.bio{max-width:430px;margin:18px auto 0;color:#aaa;font-size:14px;line-height:1.7}
+.tags{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:18px}
+.tag{border:1px solid var(--line);border-radius:5px;padding:6px 9px;color:#aaa;font:10px 'DM Mono',monospace;letter-spacing:.04em}
+.section{margin-top:17px;padding:19px 20px;border:1px solid var(--line);border-radius:12px;background:#030303}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.section-title{font:10px 'DM Mono',monospace;color:#777;letter-spacing:.16em;text-transform:uppercase}
+.section-meta{font:10px 'DM Mono',monospace;color:#666}
+.activity{display:flex;align-items:center;gap:14px}
+.activity-art{width:54px;height:54px;border-radius:9px;background:#080808;object-fit:cover;display:grid;place-items:center;color:#777;font-size:20px;flex-shrink:0}
+.activity-name{font-size:14px;font-weight:600}.activity-sub{font-size:12px;color:#888;margin-top:4px;line-height:1.4}
+.empty{font-size:12px;color:#777;line-height:1.6}
+.links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.link{display:flex;align-items:center;justify-content:center;gap:8px;min-height:43px;border:1px solid var(--line);border-radius:8px;color:#bbb;text-decoration:none;font:11px 'DM Mono',monospace;transition:.2s}
+.link:hover{border-color:#8b5cf688;color:var(--accent);background:#8b5cf608;transform:translateY(-2px)}
+.link b{font-size:14px;font-family:Arial,sans-serif}
+.footer{display:flex;justify-content:space-between;gap:10px;margin:22px 3px 0;color:#555;font:10px 'DM Mono',monospace;letter-spacing:.08em;text-transform:uppercase}
+.footer span:last-child{color:#777}
+@media(max-width:560px){.profile{padding-left:17px;padding-right:17px}.banner{height:145px;margin-left:-17px;margin-right:-17px}nav{padding:0 18px;height:65px}.navlinks{gap:13px}.navlinks a{font-size:9px}main{margin:40px auto}.profile{padding:23px 17px 20px}.hero{padding-top:32px}.links{grid-template-columns:1fr 1fr}.section{padding:16px}.footer{font-size:9px}}
+
+.smoke-particle{
+  position:fixed;left:0;top:0;width:var(--size,34px);height:var(--size,34px);
+  border-radius:50%;pointer-events:none;z-index:9999;
+  background:radial-gradient(circle,rgba(139,92,246,.32) 0%,rgba(91,33,182,.18) 38%,rgba(49,20,90,0) 72%);
+  filter:blur(var(--blur,9px));mix-blend-mode:screen;
+  transform:translate(-50%,-50%) scale(.55);
+  animation:smoke-drift 1.15s ease-out forwards;
+}
+@keyframes smoke-drift{
+  0%{opacity:.75;transform:translate(-50%,-50%) scale(.55)}
+  35%{opacity:.48}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx,18px)),calc(-50% - var(--dy,30px))) scale(2.2)}
+}
+@media(prefers-reduced-motion:reduce){
+  .smoke-particle{animation-duration:.35s}
+}
+
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<nav>
+  <div class="brand"><span>✳</span> XTRISTAN.GZ</div>
+  <div class="navlinks"><a href="#about">about</a><a href="#presence">presence</a><a href="#links">links</a></div>
+</nav>
+<main>
+  <div class="eyebrow">✳ &nbsp; personal space on the internet</div>
+  <article class="profile" id="about">
+    <div class="banner" role="img" aria-label="Profile banner"></div>\n    <div class="topline"><span>PROFILE / 001</span><span class="pill"><i class="dot" id="statusDot"></i><span id="statusText">STATUS NOT CONNECTED</span></span></div>
+    <div class="hero">
+      <div class="avatar-wrap">
+        <img class="avatar" id="avatar" src="assets/avatar.jpg" alt="Profile avatar">
+        <i class="status-ring" id="statusRing"></i>
+      </div>
+      <h1 id="displayName">xtristan.gz</h1>
+      <div class="handle" id="username">@xtristan.gz</div>
+      <p class="bio" id="bio">all about money</p>
+      <div class="tags"><span class="tag">DISCORD USER</span><span class="tag">ONLINE SOMETIMES</span><span class="tag">EST. 2026</span></div>
+    </div>
+    <section class="section" id="presence">
+      <div class="section-head"><span class="section-title">discord presence</span><span class="section-meta" id="presenceMeta">LIVE / WAITING</span></div>
+      <div class="activity">
+        <div class="activity-art" id="activityArt">⌁</div>
+        <div><div class="activity-name" id="activityName">Waiting for Discord…</div><div class="activity-sub" id="activityDetails">Add your Discord user ID in the configuration to show your live status.</div></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><span class="section-title">now playing</span><span class="section-meta">SPOTIFY / DISCORD</span></div>
+      <div class="activity">
+        <img class="activity-art" id="spotifyArt" src="" alt="" style="display:none">
+        <div class="activity-art" id="spotifyPlaceholder">♫</div>
+        <div><div class="activity-name" id="spotifyName">Nothing playing right now</div><div class="activity-sub" id="spotifyArtist">When you listen on Spotify with Discord connected, it will appear here.</div></div>
+      </div>
+    </section>
+    <section class="section" id="links">
+      <div class="section-head"><span class="section-title">find me elsewhere</span><span class="section-meta">ELSEWHERE / WEB</span></div>
+      <div class="links">
+        <a class="link" id="discordLink" href="https://discord.com" target="_blank" rel="noreferrer"><b>◉</b> Discord</a>
+        <a class="link" href="https://instagram.com/" target="_blank" rel="noreferrer"><b>◎</b> Instagram</a>
+        <a class="link" href="https://x.com/" target="_blank" rel="noreferrer"><b>𝕏</b> Twitter / X</a>
+      </div>
+    </section>
+  </article>
+  <div class="footer"><span>© <span id="year"></span> XTRISTAN.GZ</span><span>made with intent.</span></div>
+</main>
+<script>
+/* ================= EDIT THESE SETTINGS ================= */
+const CONFIG = {
+  discordId: "1319554589137047583",
+  displayName: "xtristan.gz",
+  username: "@xtristan.gz",
+  bio: "all about money",
+  discordProfile: "https://discord.com/users/1319554589137047583",
+  instagram: "https://instagram.com/",
+  twitter: "https://x.com/"
+};
+/* ======================================================= */
+const $ = id => document.getElementById(id);
+$("displayName").textContent = CONFIG.displayName;
+$("username").textContent = CONFIG.username;
+$("bio").textContent = CONFIG.bio;
+$("discordLink").href = CONFIG.discordProfile;
+$("year").textContent = new Date().getFullYear();
+document.querySelectorAll(".links a")[1].href = CONFIG.instagram;
+document.querySelectorAll(".links a")[2].href = CONFIG.twitter;
+
+function setStatus(status){
+  const labels={online:"ONLINE",idle:"IDLE",dnd:"DO NOT DISTURB",offline:"OFFLINE"};
+  $("statusText").textContent=labels[status]||"UNKNOWN";
+  $("statusDot").className="dot "+(status||"");
+  $("statusRing").style.background=({online:"#43e68a",idle:"#f0b84c",dnd:"#ed5353",offline:"#777"})[status]||"#777";
+}
+function renderPresence(data){
+  const user=data.discord_user||{};
+  if(user.global_name||user.username) $("displayName").textContent=user.global_name||user.username;
+  if(user.username) $("username").textContent="@"+user.username;
+  // The uploaded profile photo is intentionally kept as the website avatar.
+  setStatus(data.discord_status);
+  $("presenceMeta").textContent="LIVE / CONNECTED";
+  const custom=(data.activities||[]).find(a=>a.type===4);
+  const game=(data.activities||[]).find(a=>a.type===0);
+  const activity=game||custom;
+  if(activity){
+    $("activityName").textContent=game?`Playing ${game.name}`:(custom.state||custom.name||"Custom status");
+    $("activityDetails").textContent=game?(game.details||game.state||"Discord activity"):(custom.emoji?.name?custom.emoji.name+" ":"")+ (custom.state||"Your custom status");
+    if(game?.assets?.large_image&&game.application_id){
+      const key=game.assets.large_image;
+      $("activityArt").innerHTML="";
+      $("activityArt").style.backgroundImage=`url(https://cdn.discordapp.com/app-assets/${game.application_id}/${key}.png)`;
+      $("activityArt").style.backgroundSize="cover";
+    }
+  }else{
+    $("activityName").textContent="No activity right now";
+    $("activityDetails").textContent="Your Discord status is up to date.";
+  }
+  if(data.listening_to_spotify&&data.spotify){
+    const s=data.spotify;
+    $("spotifyName").textContent=s.song;
+    $("spotifyArtist").textContent=s.artist+" · "+s.album;
+    $("spotifyArt").src=s.album_art_url;
+    $("spotifyArt").style.display="block";
+    $("spotifyPlaceholder").style.display="none";
+  }else{
+    $("spotifyName").textContent="Nothing playing right now";
+    $("spotifyArtist").textContent="Spotify activity will show here when you're listening.";
+    $("spotifyArt").style.display="none";
+    $("spotifyPlaceholder").style.display="grid";
+  }
+}
+async function loadPresence(){
+  if(!/^\d{17,20}$/.test(CONFIG.discordId)){
+    $("activityName").textContent="Discord ID not configured";
+    $("activityDetails").textContent="Edit CONFIG.discordId near the bottom of index.html to enable live presence.";
+    $("presenceMeta").textContent="SETUP REQUIRED";
+    return;
+  }
+  try{
+    const r=await fetch(`https://api.lanyard.rest/v1/users/${CONFIG.discordId}`);
+    const j=await r.json();
+    if(!j.success) throw new Error("User not found in Lanyard");
+    renderPresence(j.data);
+  }catch(e){
+    $("activityName").textContent="Couldn't load Discord presence";
+    $("activityDetails").textContent="Join the Lanyard Discord server, check your user ID, then refresh.";
+    $("presenceMeta").textContent="CONNECTION ISSUE";
+  }
+}
+
+// Soft purple smoke follows mouse movement and touch/pen movement on mobile.
+(() => {
+  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let lastSpawn = 0;
+  let touchActive = false;
+  function makeSmoke(x, y, intensity = 1) {
+    const now = performance.now();
+    if (now - lastSpawn < (intensity > 1 ? 24 : 34)) return;
+    lastSpawn = now;
+    const particle = document.createElement("i");
+    particle.className = "smoke-particle";
+    const size = 24 + Math.random() * 36;
+    particle.style.left = x + "px";
+    particle.style.top = y + "px";
+    particle.style.setProperty("--size", size + "px");
+    particle.style.setProperty("--blur", (7 + Math.random() * 9) + "px");
+    particle.style.setProperty("--dx", (-24 + Math.random() * 48) + "px");
+    particle.style.setProperty("--dy", (18 + Math.random() * 42) + "px");
+    particle.style.opacity = reduceMotion ? ".28" : String(.55 + Math.random() * .3);
+    document.body.appendChild(particle);
+    particle.addEventListener("animationend", () => particle.remove(), {once:true});
+  }
+  window.addEventListener("pointermove", event => {
+    if (event.pointerType === "touch" && !touchActive) return;
+    makeSmoke(event.clientX, event.clientY, event.pointerType === "touch" ? 1.4 : 1);
+  }, {passive:true});
+  window.addEventListener("pointerdown", event => {
+    if (event.pointerType === "touch") {
+      touchActive = true;
+      makeSmoke(event.clientX, event.clientY, 1.5);
+    }
+  }, {passive:true});
+  window.addEventListener("pointerup", () => { touchActive = false; }, {passive:true});
+  window.addEventListener("pointercancel", () => { touchActive = false; }, {passive:true});
+})();
+
+loadPresence();
+setInterval(loadPresence,30000);
+</script>
+</body>
+</html>
