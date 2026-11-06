@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <title>rev — personal space</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #000; color: #e8e8e8; }
+    body {
+      min-height: 100vh;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      overflow-x: hidden;
+    }
+    .gate {
+      position: fixed; inset: 0; z-index: 5; display: grid; place-items: center;
+      padding: 24px; background: #000; transition: opacity .65s ease, visibility .65s ease;
+    }
+    .gate.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .gate-inner { width: min(460px, 100%); }
+    .prompt {
+      display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #303030;
+      padding: 12px 0; color: #777; font-size: 12px; letter-spacing: .12em;
+    }
+    .prompt span { color: #aaa; white-space: nowrap; }
+    .prompt input {
+      width: 100%; min-width: 0; border: 0; outline: 0; background: transparent;
+      color: #f2f2f2; font: inherit; font-size: 14px; letter-spacing: .08em;
+      caret-color: #fff;
+    }
+    .prompt input::placeholder { color: #444; }
+    .hint {
+      margin-top: 13px; color: #666; font-size: 11px; letter-spacing: .045em;
+      text-align: center;
+    }
+    .hint strong { color: #aaa; font-weight: 400; }
+    .error {
+      min-height: 16px; margin-top: 12px; color: #777; font-size: 11px;
+      text-align: center; opacity: 0; transition: opacity .2s;
+    }
+    .error.show { opacity: 1; }
+    .shake { animation: shake .28s linear; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    .site { min-height: 100vh; opacity: 0; transition: opacity .8s ease; }
+    .site.visible { opacity: 1; }
+    .profile { width: min(760px, calc(100% - 36px)); margin: 0 auto; padding: 70px 0; }
+    .banner {
+      height: 190px; border: 1px solid #171717; background: #080808 center/cover no-repeat;
+      background-image: linear-gradient(135deg, #090909, #020202);
+    }
+    .identity { display: flex; align-items: end; gap: 18px; margin: -42px 0 24px 22px; }
+    .avatar {
+      width: 88px; height: 88px; border: 4px solid #000; border-radius: 50%;
+      object-fit: cover; background: #101010;
+    }
+    .name { padding-bottom: 7px; }
+    .name h1 { margin: 0; font-size: 25px; font-weight: 500; letter-spacing: .08em; }
+    .name p { margin: 5px 0 0; color: #777; font-size: 12px; }
+    .content { border-top: 1px solid #1c1c1c; padding: 24px 22px; }
+    .eyebrow { color: #666; font-size: 10px; letter-spacing: .2em; }
+    .bio { margin: 13px 0 0; color: #b7b7b7; font-size: 13px; line-height: 1.9; }
+    .footer { margin-top: 42px; color: #444; font-size: 10px; letter-spacing: .12em; }
+    @media (max-width: 520px) {
+      .banner { height: 145px; }
+      .profile { padding: 40px 0; }
+      .identity { margin-left: 12px; }
+      .content { padding: 22px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="gate" id="gate">
+    <div class="gate-inner" id="gateInner">
+      <form class="prompt" id="unlockForm" autocomplete="off">
+        <span>PASS://</span>
+        <input id="password" type="password" placeholder="enter password" aria-label="Password" autofocus>
+      </form>
+      <div class="hint">HINT: <strong>tristan</strong></div>
+      <div class="error" id="error" role="status">ACCESS DENIED — TRY AGAIN</div>
+    </div>
+  </main>
+
+  <main class="site" id="site" aria-hidden="true">
+    <section class="profile">
+      <div class="banner" role="img" aria-label="Profile banner"></div>
+      <div class="identity">
+        <img class="avatar" src="assets/avatar.jpg" alt="rev profile avatar" onerror="this.style.visibility='hidden'">
+        <div class="name">
+          <h1>rev</h1>
+          <p>revshitperogoodside</p>
+        </div>
+      </div>
+      <div class="content">
+        <div class="eyebrow">PERSONAL SPACE // ONLINE</div>
+        <p class="bio">welcome to my corner of the internet.</p>
+      </div>
+      <div class="footer">© REV — ALL RIGHTS RESERVED</div>
+    </section>
+  </main>
+
+  <script>
+    const PASSWORD = "tristan";
+    const form = document.getElementById("unlockForm");
+    const input = document.getElementById("password");
+    const gate = document.getElementById("gate");
+    const gateInner = document.getElementById("gateInner");
+    const error = document.getElementById("error");
+    const site = document.getElementById("site");
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (input.value.trim().toLowerCase() === PASSWORD) {
+        gate.classList.add("hidden");
+        site.classList.add("visible");
+        site.setAttribute("aria-hidden", "false");
+        setTimeout(() => gate.remove(), 700);
+      } else {
+        error.classList.add("show");
+        gateInner.classList.remove("shake");
+        void gateInner.offsetWidth;
+        gateInner.classList.add("shake");
+        input.value = "";
+        input.focus();
+      }
+    });
+  </script>
+</body>
+</html>
