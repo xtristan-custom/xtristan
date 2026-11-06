@@ -85,6 +85,20 @@ body.locked{overflow:hidden}
 .access-hint{margin-top:13px;text-align:center;color:#666;font:10px 'DM Mono',monospace;letter-spacing:.08em}
 .access-hint span{color:#aaa}
 @keyframes input-shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+.music-player{display:flex;align-items:center;gap:18px;padding:16px;border:1px solid #ffffff12;border-radius:12px;background:linear-gradient(135deg,#111 0%,#070707 58%,#101010 100%);overflow:hidden}
+.record-art{width:116px;height:116px;flex:0 0 116px;border-radius:50%;display:grid;place-items:center;background:repeating-radial-gradient(circle at center,#171717 0 2px,#080808 3px 5px);border:1px solid #ffffff20;box-shadow:0 8px 28px #000;position:relative}
+.record-art:before{content:"";position:absolute;inset:9px;border-radius:50%;border:1px solid #ffffff16}
+.record-label{width:37px;height:37px;border-radius:50%;display:grid;place-items:center;background:#d8d8d8;color:#111;font:700 9px 'DM Mono',monospace;letter-spacing:.04em;box-shadow:0 0 0 4px #222}
+.record-label span{font-size:8px;margin-left:2px}
+.record-art.spinning{animation:record-spin 5s linear infinite}
+@keyframes record-spin{to{transform:rotate(360deg)}}
+.player-main{min-width:0;flex:1}.player-kicker{font:9px 'DM Mono',monospace;letter-spacing:.18em;color:#777}.player-track{font-size:17px;font-weight:700;letter-spacing:-.03em;margin-top:5px}.player-artist{font-size:12px;color:#888;margin-top:2px}
+.player-progress{margin-top:14px}.player-progress input{display:block;width:100%;height:3px;margin:0;accent-color:#eee;cursor:pointer}.player-times{display:flex;justify-content:space-between;margin-top:5px;color:#777;font:9px 'DM Mono',monospace}
+.player-controls{display:flex;align-items:center;gap:10px;margin-top:11px}.player-controls button{border:0;cursor:pointer;display:grid;place-items:center;transition:transform .15s,background .15s}.player-controls button:hover{transform:scale(1.06)}.player-toggle{width:34px;height:34px;border-radius:50%;background:#eee;color:#050505;font-size:13px}.player-small{width:28px;height:28px;border-radius:50%;background:#ffffff0c;color:#bbb;font-size:15px}.player-note{margin-left:auto;color:#666;font:8px 'DM Mono',monospace;letter-spacing:.08em}
+.youtube-audio-engine{position:absolute;width:200px;height:200px;left:-10000px;top:auto;overflow:hidden;clip-path:inset(50%);pointer-events:none}
+@media(max-width:480px){.music-player{gap:13px;padding:12px}.record-art{width:86px;height:86px;flex-basis:86px}.record-label{width:30px;height:30px;font-size:8px}.player-track{font-size:15px}.player-note{display:none}}
+
 </style>
 </head>
 <body class="locked">
@@ -130,18 +144,23 @@ body.locked{overflow:hidden}
       </div>
     </section>
     <section class="section" id="soundtrack">
-      <div class="section-head"><span class="section-title">site soundtrack</span><span class="section-meta">NOW PLAYING / HEV ABI</span></div>
-      <div class="activity" style="align-items:flex-start;flex-direction:column;gap:12px">
-        <div>
-          <div class="activity-name">Para Sa Streets</div>
-          <div class="activity-sub">Hev Abi · starts after access (use player controls if autoplay is blocked)</div>
+      <div class="section-head"><span class="section-title">site soundtrack</span><span class="section-meta" id="playerStatus">READY TO PLAY</span></div>
+      <div class="music-player">
+        <div class="record-art" id="recordArt" aria-hidden="true"><div class="record-label">REV<span>✳</span></div></div>
+        <div class="player-main">
+          <div class="player-kicker">FEATURED TRACK</div>
+          <div class="player-track">Para Sa Streets</div>
+          <div class="player-artist">Hev Abi</div>
+          <div class="player-progress"><input id="trackSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Track progress"><div class="player-times"><span id="trackElapsed">0:00</span><span id="trackDuration">0:00</span></div></div>
+          <div class="player-controls">
+            <button class="player-small" id="restartTrack" type="button" aria-label="Restart track">↺</button>
+            <button class="player-toggle" id="toggleTrack" type="button" aria-label="Play track">▶</button>
+            <button class="player-small" id="muteTrack" type="button" aria-label="Mute audio">♪</button>
+            <span class="player-note" id="playerNote">PRESS PLAY TO LISTEN</span>
+          </div>
         </div>
-        <iframe id="siteSoundtrack" title="Hev Abi — Para Sa Streets" width="100%" height="166"
-          src="about:blank" data-video="75UGXuyoFII"
-          style="display:block;border:0;border-radius:9px;background:#080808"
-          allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
-          loading="lazy"></iframe>
       </div>
+      <div id="soundtrackVideo" class="youtube-audio-engine" aria-hidden="true"></div>
     </section>
 
   </article>
@@ -158,9 +177,7 @@ accessForm.addEventListener("submit", event => {
   event.preventDefault();
   if (accessPassword.value.trim().toLowerCase() === ACCESS_KEY) {
     document.body.classList.remove("locked");
-    const soundtrack = document.getElementById("siteSoundtrack");
-    const videoId = soundtrack.dataset.video;
-    soundtrack.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&loop=1&playlist=${videoId}`;
+    startSoundtrack();
     accessGate.classList.add("unlocked");
     window.setTimeout(() => accessGate.remove(), 600);
   } else {
@@ -170,6 +187,90 @@ accessForm.addEventListener("submit", event => {
     accessPassword.value = "";
     accessPassword.focus();
   }
+});
+
+// Custom player UI powered by the YouTube audio engine (the video itself stays hidden).
+const SOUNDTRACK_VIDEO_ID = "75UGXuyoFII";
+let soundtrackPlayer = null;
+let soundtrackReady = false;
+let soundtrackProgressTimer = null;
+let seekInProgress = false;
+const playerUI = {
+  play: document.getElementById("toggleTrack"), seek: document.getElementById("trackSeek"),
+  elapsed: document.getElementById("trackElapsed"), duration: document.getElementById("trackDuration"),
+  status: document.getElementById("playerStatus"), note: document.getElementById("playerNote"),
+  art: document.getElementById("recordArt"), mute: document.getElementById("muteTrack")
+};
+function formatTrackTime(seconds){
+  if(!Number.isFinite(seconds)||seconds<0) return "0:00";
+  const m=Math.floor(seconds/60), sec=Math.floor(seconds%60);
+  return `${m}:${String(sec).padStart(2,"0")}`;
+}
+function setTrackPlaying(playing){
+  playerUI.play.textContent=playing?"Ⅱ":"▶";
+  playerUI.play.setAttribute("aria-label",playing?"Pause track":"Play track");
+  playerUI.art.classList.toggle("spinning",playing);
+  playerUI.status.textContent=playing?"NOW PLAYING":"PAUSED";
+  playerUI.note.textContent=playing?"PLAYING ON THIS DEVICE":"PRESS PLAY TO LISTEN";
+}
+function updateTrackProgress(){
+  if(!soundtrackPlayer||!soundtrackReady||seekInProgress)return;
+  const current=soundtrackPlayer.getCurrentTime()||0;
+  const total=soundtrackPlayer.getDuration()||0;
+  playerUI.elapsed.textContent=formatTrackTime(current);
+  playerUI.duration.textContent=formatTrackTime(total);
+  playerUI.seek.value=total?Math.min(100,current/total*100):0;
+}
+function startSoundtrack(){
+  if(soundtrackPlayer){soundtrackPlayer.playVideo();return;}
+  playerUI.status.textContent="LOADING AUDIO";
+  if(!window.YT||!window.YT.Player){
+    window.onYouTubeIframeAPIReady=function(){createSoundtrackPlayer(true);};
+    const api=document.createElement("script");api.src="https://www.youtube.com/iframe_api";
+    document.head.appendChild(api);
+  }else createSoundtrackPlayer(true);
+}
+function createSoundtrackPlayer(autoplay){
+  if(soundtrackPlayer)return;
+  soundtrackPlayer=new YT.Player("soundtrackVideo",{
+    width:"200",height:"200",videoId:SOUNDTRACK_VIDEO_ID,
+    playerVars:{autoplay:autoplay?1:0,controls:0,disablekb:1,playsinline:1,rel:0,loop:1,playlist:SOUNDTRACK_VIDEO_ID},
+    events:{onReady:event=>{
+      soundtrackReady=true;
+      playerUI.status.textContent="READY TO PLAY";
+      playerUI.duration.textContent=formatTrackTime(event.target.getDuration());
+      if(autoplay)event.target.playVideo();
+      if(!soundtrackProgressTimer)soundtrackProgressTimer=window.setInterval(updateTrackProgress,500);
+    },onStateChange:event=>{
+      if(event.data===YT.PlayerState.PLAYING)setTrackPlaying(true);
+      else if(event.data===YT.PlayerState.PAUSED||event.data===YT.PlayerState.ENDED)setTrackPlaying(false);
+      if(event.data===YT.PlayerState.ENDED)event.target.seekTo(0,true);
+    },onError:()=>{playerUI.status.textContent="AUDIO UNAVAILABLE";playerUI.note.textContent="TRY AGAIN LATER";}}
+  });
+}
+playerUI.play.addEventListener("click",()=>{
+  if(!soundtrackPlayer){startSoundtrack();return;}
+  const state=soundtrackPlayer.getPlayerState();
+  if(state===YT.PlayerState.PLAYING)soundtrackPlayer.pauseVideo();
+  else soundtrackPlayer.playVideo();
+});
+document.getElementById("restartTrack").addEventListener("click",()=>{
+  if(soundtrackPlayer){soundtrackPlayer.seekTo(0,true);soundtrackPlayer.playVideo();}
+});
+playerUI.mute.addEventListener("click",()=>{
+  if(!soundtrackPlayer)return;
+  if(soundtrackPlayer.isMuted()){soundtrackPlayer.unMute();playerUI.mute.textContent="♪";}
+  else{soundtrackPlayer.mute();playerUI.mute.textContent="×";}
+});
+playerUI.seek.addEventListener("input",()=>{
+  if(!soundtrackPlayer||!soundtrackReady)return;
+  seekInProgress=true;
+  const total=soundtrackPlayer.getDuration()||0;
+  playerUI.elapsed.textContent=formatTrackTime(total*(Number(playerUI.seek.value)/100));
+});
+playerUI.seek.addEventListener("change",()=>{
+  if(soundtrackPlayer&&soundtrackReady){const total=soundtrackPlayer.getDuration()||0;soundtrackPlayer.seekTo(total*(Number(playerUI.seek.value)/100),true);}
+  seekInProgress=false;
 });
 
 /* ================= EDIT THESE SETTINGS ================= */
