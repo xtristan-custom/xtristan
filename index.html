@@ -229,7 +229,8 @@ nav{display:none!important}
 .term-sub{width:min(52%,610px);margin:0 0 24px;text-align:center;color:#aaa;font-size:11px;letter-spacing:.22em;text-transform:uppercase}
 .term-sep{color:#666;padding:0 8px}.term-command-hint{color:#fff;text-decoration:underline;text-underline-offset:4px}
 .term-output{width:min(52%,610px);min-height:54px;max-height:34vh;overflow:auto;padding:16px 18px 8px;border-top:1px solid var(--edge);color:#ddd;font-size:12px;line-height:1.85;text-shadow:0 1px 8px #000;white-space:pre-wrap;overflow-wrap:anywhere;background:rgba(0,0,0,.28)}
-.term-line{color:#c9c9c9;margin:7px 0}.term-line .cmd{color:#fff;text-shadow:0 0 12px #fff5}
+.term-line{color:#c9c9c9;margin:7px 0}
+.term-output a{color:#f4f4f4;text-decoration:underline;text-underline-offset:3px}.term-output a:hover{color:#fff;text-shadow:0 0 10px #fff8}.term-line .cmd{color:#fff;text-shadow:0 0 12px #fff5}
 .term-prompt{width:min(52%,610px);display:flex;align-items:center;gap:9px;margin:0;padding:10px 18px 15px;border-bottom:1px solid var(--edge);color:#eee;font-size:12px;position:relative;z-index:20;cursor:text;background:rgba(0,0,0,.28)}
 .term-prompt label{white-space:nowrap;color:#aaa}.term-prompt input{min-width:0;flex:1;background:transparent;border:0;outline:0;color:#fff;font:inherit;padding:8px 3px;caret-color:#fff;pointer-events:auto;touch-action:manipulation}
 .term-prompt input::placeholder{color:#555}.term-tip{width:min(52%,610px);margin:12px 0 0;text-align:center;color:#888;font-size:9px;letter-spacing:.12em;line-height:1.8}
@@ -259,7 +260,7 @@ nav{display:none!important}
   <p class="term-sub">@rev <span class="term-sep">/</span> TYPE <span class="term-command-hint">HELP</span> TO BEGIN</p>
   <div class="term-output" id="termOutput" aria-live="polite">SYSTEM READY <span class="term-command-hint">— TYPE HELP</span></div>
   <form class="term-prompt" id="termForm" autocomplete="off"><label for="termInput">rev@localhost:~$</label><input id="termInput" name="command" aria-label="Enter command" spellcheck="false" autocapitalize="off" autocomplete="off" autofocus></form>
-  <p class="term-tip">AVAILABLE: HELP · REV · CONFIDANTS · STATUS · MUSIC · CLEAR</p>
+  <p class="term-tip">AVAILABLE: HELP · REV · CONFIDANTS · SERVERS · STATUS · MUSIC · CLEAR</p>
 </div>
 <div id="terminalResults" aria-live="polite"><main id="terminalMain"></main></div>
 
@@ -765,9 +766,10 @@ setInterval(loadPresence,30000);
  const write=(html)=>{out.innerHTML=html;out.scrollTop=out.scrollHeight};
  const names=()=>[...(friends?.querySelectorAll('.confidant')||[])].map((card,i)=>{const n=card.querySelector('.confidant-name')?.textContent.trim()||'Unknown';const h=card.querySelector('.confidant-handle')?.textContent.trim()||'';return `${String(i+1).padStart(2,'0')}  ${n}${h?'  '+h:''}`});
  function run(raw){const cmd=raw.trim().toLowerCase();if(!cmd)return;const echo=`<div class="term-line">rev@localhost:~$ <span class="cmd">${esc(raw)}</span></div>`;
-  if(cmd==='help'||cmd==='/?'){write(echo+'<div>AVAILABLE COMMANDS</div><div class="term-line">tristan / rev&nbsp;&nbsp; display the profile</div><div class="term-line">confidants&nbsp;&nbsp;&nbsp;&nbsp; list the inner circle</div><div class="term-line">clear / cls&nbsp;&nbsp;&nbsp; clear the terminal</div><div class="term-line">help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; show this command list</div>');results.classList.remove('active','show-profile','show-confidants');}
+  if(cmd==='help'||cmd==='/?'){write(echo+'<div>AVAILABLE COMMANDS</div><div class="term-line">tristan / rev&nbsp;&nbsp; display the profile</div><div class="term-line">confidants&nbsp;&nbsp;&nbsp;&nbsp; list the inner circle</div><div class="term-line">servers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; list affiliated Discord servers</div><div class="term-line">status / music&nbsp; show presence / soundtrack</div><div class="term-line">clear / cls&nbsp;&nbsp;&nbsp; clear the terminal</div><div class="term-line">help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; show this command list</div>');results.classList.remove('active','show-profile','show-confidants');}
   else if(cmd==='tristan'||cmd==='rev'){if(profile){results.classList.add('active','show-profile');results.classList.remove('show-confidants');write(echo+'<div class="term-line">Loading user profile... <span style="color:#eeeeee">[OK]</span></div><div class="term-line">PROFILE FOUND: REV</div>');results.scrollIntoView({behavior:'smooth',block:'start'});}}
   else if(cmd==='members'||cmd==='confidants'){if(friends){results.classList.add('active','show-confidants');results.classList.remove('show-profile');write(echo+'<div>INNER CIRCLE / '+names().length+' MEMBERS</div><div class="term-line">'+names().map(esc).join('<br>')+'</div>');results.scrollIntoView({behavior:'smooth',block:'start'});}}
+  else if(cmd==='servers'){results.classList.remove('show-profile','show-confidants');results.classList.add('active');write(echo+'<div> AFFILIATED DISCORD SERVERS / 03</div><div class="term-line">[01] REVSHIT — home<br>     INVITE: <a href="https://discord.gg/revshit" target="_blank" rel="noopener noreferrer">discord.gg/revshit</a></div><div class="term-line">[02] REVGNG<br>     INVITE: <a href="https://discord.gg/zMA6VMYYZ" target="_blank" rel="noopener noreferrer">discord.gg/zMA6VMYYZ</a></div><div class="term-line">[03] ARENA<br>     INVITE: <a href="https://discord.gg/arenawrld" target="_blank" rel="noopener noreferrer">discord.gg/arenawrld</a></div><div class="term-line">[END OF LIST]</div>');results.scrollIntoView({behavior:'smooth',block:'start'});}
   else if(cmd==='clear'||cmd==='cls'){write('Terminal cleared. Type <span style="color:#eeeeee">help</span> for commands.');results.classList.remove('active','show-profile','show-confidants');}
   else{write(echo+'<div class="term-line">Command not recognized: '+esc(raw)+'</div><div class="term-line">Type <span style="color:#eeeeee">help</span> to see available commands.</div>');}
  }
