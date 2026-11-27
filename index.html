@@ -226,7 +226,7 @@ main{width:min(100% - 32px,720px);margin:70px auto 60px}
 </style></head>
 <body class="locked">
 <div aria-label="Enter profile" id="accessGate" role="button" tabindex="0">
-<div class="intro-message">luv, rev, and dreams</div>
+<div class="intro-message">sa ngalan ng W.B.N.T, AMEN!</div>
 <div class="intro-hint">CLICK ANYWHERE TO ENTER</div>
 </div>
 <style id="rev-sakura-terminal-theme">
@@ -457,7 +457,8 @@ accessGate.addEventListener("keydown", event => {
 
 // Hidden YouTube audio engine. Playback is requested after the visitor clicks
 // the intro, which is a user gesture browsers can allow to start audio.
-const SOUNDTRACK_VIDEO_ID = "75UGXuyoFII";
+const SOUNDTRACK_VIDEO_ID = "UnFn8mSsIv4";
+const SOUNDTRACK_START_SECONDS = 19;
 let soundtrackPlayer = null;
 let soundtrackReady = false;
 let soundtrackRequested = false;
@@ -478,10 +479,10 @@ function createSoundtrackPlayer(){
     events: {
       onReady: event => {
         soundtrackReady = true;
-        if (soundtrackRequested) event.target.playVideo();
+        if (soundtrackRequested) { event.target.seekTo(SOUNDTRACK_START_SECONDS, true); event.target.playVideo(); }
       },
       onStateChange: event => {
-        if (event.data === YT.PlayerState.ENDED) event.target.seekTo(0, true);
+        if (event.data === YT.PlayerState.ENDED) event.target.seekTo(SOUNDTRACK_START_SECONDS, true);
       }
     }
   });
